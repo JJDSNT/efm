@@ -42,6 +42,30 @@ function fileSelected(event) {
         new Epub(files[0], createReader);
 }
 
+async function readUrl(url) {
+var request = new XMLHttpRequest();
+request.open("GET", url, true);
+request.responseType = "blob";
+request.onload = function () {
+    new Epub(request.response, function (bookData) {
+        Monocle.Reader("reader", bookData);
+    });
+};
+request.send();
+}
+
+/**var request = new XMLHttpRequest();
+request.open("GET", "url/of/file.epub", true);
+request.responseType = "blob";
+request.onload = function () {
+    new Epub(request.response, function (bookData) {
+        Monocle.Reader("reader", bookData);
+    });
+};
+request.send();
+**/
+
+
 // This will be called when the Epub object is fully initialized and
 // ready to get passed to the Monocle.Reader.
 function createReader(bookData) {
@@ -119,8 +143,9 @@ body > p {
 <body>
 <h1>EFM &mdash; Epub for Monocle</h1>
 <div id="reader">
-<p>Select an Epub file to read:
-<input type="file" id="file" accept="application/epub+zip" onchange="fileSelected(event)" />
+<p>Select an Epub file (enter url) to read:
+<!-- <input type="file" id="file" accept="application/epub+zip" onchange="fileSelected(event)" /> -->
+<input type="text" onchange="readUrl(this.value)" /> 
 </p>
 </div>
 
